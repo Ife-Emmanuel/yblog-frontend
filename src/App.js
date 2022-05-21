@@ -1,25 +1,38 @@
-import logo from './logo.svg';
 import './App.css';
+import React, {useState, useEffect} from 'react';
+import {Link} from 'react-router-dom';
+import { toBeRequired } from '@testing-library/jest-dom/dist/matchers';
 
-function App() {
+
+
+
+function App(){
+
+  const [articles, setArticles] = useState([])
+
+  useEffect(()=>{
+    fetch('https://yblog.herokuapp.com/api/articles', {
+      'method' : 'GET',
+      headers : {
+        'Content-Type' : 'application/json',
+        'Authorization' : 'Token 9693c66068a701dc90a0bafb0898be0cd5023ab1',
+      }
+    })
+    .then(resp => resp.json())
+    .then(data => setArticles(data))
+    .catch(error => console.log(error))
+  }, [])
+  
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <div className="App"> 
+
+       <h2>Django and ReactJS Course</h2>
+       {articles.map(article => {
+         return <h3 key={article.id}>{article.title}</h3>
+       })}
+
+    </div> 
+  )
 }
 
 export default App;
